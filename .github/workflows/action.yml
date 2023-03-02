@@ -23,7 +23,8 @@ jobs:
         env:
           githubtoken: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          echo "token="$env:githubtoken"" >> $GITHUB_OUTPUT
+          echo "token=$env:githubtoken" >> $GITHUB_OUTPUT
+          echo "$env:githubtoken"
         id: extract_token
         
   Routine_Check_for_Commit:
