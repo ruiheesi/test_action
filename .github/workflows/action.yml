@@ -31,5 +31,5 @@ jobs:
       uses: ruiheesi/check-action-info/.github/workflows/action.yml@main
       with:
          action: "test"
-         githubtoken: "${{ needs.Get_infos.outputs.token }}"
+         githubtoken: ${{ secrets.GITHUB_TOKEN }}
          githubbranch: "${{ needs.Get_infos.outputs.branch }}"
