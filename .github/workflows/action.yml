@@ -2,7 +2,8 @@ name: Test
 run-name: Test action
 on:
   push:
-    - main
+    branches:
+      - '*'
   workflow_dispatch:
 
 jobs:
