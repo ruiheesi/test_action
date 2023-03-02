@@ -6,9 +6,22 @@ on:
       - '*'
 
 jobs:
+  Get_infos:
+    runs-on: ubuntu-latest
+    outputs:
+      branch: ${{ steps.extract_branch.outputs.branch }}
+    steps:
+      - name: Extract branch name
+        shell: bash
+        run: |
+          echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+          echo "Push time: ${{ github.event.head_commit.timestamp }}"
+        id: extract_branch
+        
   Routine_Check_for_Commit:
+      needs: Get_infos
       uses: ruiheesi/check-action-info/.github/workflows/action.yml@main
       with:
          action: "test"
          githubtoken: ${{ secrets.GITHUB_TOKEN }}
-         githubbranch: ${{ GITHUB_REF#refs/heads/ }}
+         githubbranch: ${{ needs.Get_infos.outputs.branch }}
