@@ -8,6 +8,8 @@ on:
 jobs:
   Get_infos:
     runs-on: ubuntu-latest
+    env:
+      githubtoken: ${{ secrets.GITHUB_TOKEN }}
     outputs:
       branch: ${{ steps.extract_branch.outputs.branch }}
       token: ${{ steps.extract_token.outputs.token }}
@@ -20,11 +22,9 @@ jobs:
         
       - name: Extract token
         shell: bash
-        env:
-          githubtoken: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          echo "token=$env:githubtoken" >> $GITHUB_OUTPUT
-          echo "$env:githubtoken"
+          echo "token=$githubtoken" >> $GITHUB_OUTPUT
+          echo "$githubtoken"
         id: extract_token
         
   Routine_Check_for_Commit:
