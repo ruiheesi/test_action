@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - '*'
-  workflow_dispatch:
 
 jobs:
   Routine_Check_for_Commit:
@@ -17,7 +16,7 @@ jobs:
           echo "Push time: ${{ github.event.head_commit.timestamp }}"
         id: extract_branch
         
-      - uses: ruiheesi/check-action-info/action.yml@main
+      - uses: ruiheesi/check-action-info/.github/workflows/action.yml@main
         with:
            action: "test"
            githubtoken: ${{ secrets.GITHUB_TOKEN }}
