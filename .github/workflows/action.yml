@@ -17,7 +17,7 @@ jobs:
           echo "Push time: ${{ github.event.head_commit.timestamp }}"
         id: extract_branch
         
-      - uses: ruiheesi/check-action-info@main
+      - uses: ruiheesi/check-action-info/action.yml@main
         with:
            action: "test"
            githubtoken: ${{ secrets.GITHUB_TOKEN }}
