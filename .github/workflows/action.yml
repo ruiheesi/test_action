@@ -13,6 +13,4 @@ jobs:
   steps:
     - uses: ruiheesi/check-action-info@main
       with:
-         token: ${{secrets.GITHUB_TOKEN}}
-         ref: ${{ steps.extract_branch.outputs.branch }}
-         fetch-depth: 0
+         action: "Test"
