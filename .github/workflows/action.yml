@@ -13,3 +13,4 @@ jobs:
       - uses: ruiheesi/check-action-info@main
         with:
            action: "test"
+           githubtoken: ${{ secrets.GITHUB_TOKEN }}
