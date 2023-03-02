@@ -7,17 +7,8 @@ on:
 
 jobs:
   Routine_Check_for_Commit:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Extract branch name
-        shell: bash
-        run: |
-          echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
-          echo "Push time: ${{ github.event.head_commit.timestamp }}"
-        id: extract_branch
-        
-      - uses: ruiheesi/check-action-info/.github/workflows/action.yml@main
-        with:
-           action: "test"
-           githubtoken: ${{ secrets.GITHUB_TOKEN }}
-           githubbranch: ${{ steps.extract_branch.outputs.branch }}
+      uses: ruiheesi/check-action-info/.github/workflows/action.yml@main
+      with:
+         action: "test"
+         githubtoken: ${{ secrets.GITHUB_TOKEN }}
+         githubbranch: ${{ GITHUB_REF#refs/heads/ }}
