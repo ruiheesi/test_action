@@ -10,7 +10,7 @@ jobs:
   Routine_Check_for_Commit:
     runs-on: ubuntu-latest
   
-  steps:
-    - uses: ruiheesi/check-action-info@main
-      with:
-         action: "Test"
+    steps:
+      - uses: ruiheesi/check-action-info@main
+        with:
+           action: "Test"
