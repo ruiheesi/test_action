@@ -5,6 +5,7 @@ on:
     branches:
       - '*'
 
+
 jobs:
   Get_infos:
     runs-on: ubuntu-latest
