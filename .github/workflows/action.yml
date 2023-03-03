@@ -34,3 +34,4 @@ jobs:
       with:
          action: "test-not test"
          githubbranch: "${{ needs.Get_infos.outputs.branch }}"
+         image_to_use: "ghcr.io/ruiheesi/single-cell-rna-r4:latest"
