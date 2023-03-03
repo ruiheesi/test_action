@@ -27,6 +27,8 @@ jobs:
       - run: |
           echo "event_name: ${{ github.event_name }}"
       - run: |
+          echo "event_name: ${{ github.push.branch }}"
+      - run: |
           echo "event_type: ${{ github.event.action}}"
       - run: |
           echo "merged: ${{ github.event.pull_request.merged }}"
