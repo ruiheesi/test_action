@@ -30,7 +30,7 @@ jobs:
         
   Routine_Check_for_Commit:
       needs: Get_infos
-      uses: ruiheesi/check-action-info/.github/workflows/action.yml@main
+      uses: ruiheesi/check-action-info/action.yml@main
       with:
          action: "test-not test"
          githubbranch: "${{ needs.Get_infos.outputs.branch }}"
