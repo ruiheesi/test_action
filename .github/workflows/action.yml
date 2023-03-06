@@ -10,7 +10,7 @@ on:
     branches: ['main', 'release*']
 
 env:
-  Image_to_be_used: ghcr.io/ruiheesi/single-cell-rna-r4:latest
+  set_image_to_be_used: ghcr.io/ruiheesi/single-cell-rna-r4:latest
   commit_check: fnlcr-bids-sdsi/gitflow-R/.github/workflows/Check_On_Commit.yml@main
   merge_release_check: fnlcr-bids-sdsi/gitflow-R/.github/workflows/Check_On_Merge_to_Release.yml@main
   merge_main_check: fnlcr-bids-sdsi/gitflow-R/.github/workflows/Check_On_Merge_to_Main.yml@main
@@ -60,7 +60,7 @@ jobs:
     with:
       action: "test"
       githubbranch: ${{ needs.Acquiring_Event_Type_And_Status.outputs.event_branch }}
-      image_to_use: "${{ Image_to_be_used }}"
+      image_to_use: "${{ env.set_image_to_be_used }}"
        
   Test_merge_open:
     needs: Acquiring_Event_Type_And_Status
