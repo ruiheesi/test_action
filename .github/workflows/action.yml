@@ -18,7 +18,7 @@ jobs:
       merge_release_check: fnlcr-bids-sdsi/gitflow-R/.github/workflows/Check_On_Merge_to_Release.yml@main
       merge_main_check: fnlcr-bids-sdsi/gitflow-R/.github/workflows/Check_On_Merge_to_Main.yml@main
       post_merge_main: fnlcr-bids-sdsi/gitflow-R/.github/workflows/Append_File_On_Merged_to_Main.yml@main
-      test_run: "action.yml@main"
+      test_run: "action.yml"
       
     steps:
       - name: Print action scripts to be used
