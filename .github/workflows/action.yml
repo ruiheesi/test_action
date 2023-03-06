@@ -60,7 +60,7 @@ jobs:
     with:
       action: "test"
       githubbranch: ${{ needs.Acquiring_Event_Type_And_Status.outputs.event_branch }}
-      image_to_use: "${{ env.Image_to_be_used }}"
+      image_to_use: "${{ Image_to_be_used }}"
        
   Test_merge_open:
     needs: Acquiring_Event_Type_And_Status
