@@ -14,78 +14,22 @@ jobs:
     runs-on: ubuntu-latest
     env:
       set_image_to_be_used: ghcr.io/ruiheesi/single-cell-rna-r4:latest
-      commit_check: fnlcr-bids-sdsi/gitflow-R/.github/workflows/Check_On_Commit.yml@main
-      merge_release_check: fnlcr-bids-sdsi/gitflow-R/.github/workflows/Check_On_Merge_to_Release.yml@main
-      merge_main_check: fnlcr-bids-sdsi/gitflow-R/.github/workflows/Check_On_Merge_to_Main.yml@main
-      post_merge_main: fnlcr-bids-sdsi/gitflow-R/.github/workflows/Append_File_On_Merged_to_Main.yml@main
-      test_run: action.yml
-      test_run_2: ruiheesi/check-action-info/.github/workflows/action.yml@main
+      action_version: main
+      test: Yes
 
     steps:
       - name: Print action scripts to be used
         shell: bash
         run: |
           echo "Image: ${{ env.set_image_to_be_used }}"
-          echo "Commit check: ${{ env.commit_check }}"
-          echo "Merge to release check: ${{ env.merge_release_check }}"
-          echo "Merge to main check: ${{ env.merge_main_check }}"
-          echo "Post merge to main check: ${{ env.post_merge_main }}"
-          echo "Test: ${{ env.test_run }}"
-          echo "Version to use: ${{ env.version_to_use }}"
-  
-  Acquiring_Event_Type_And_Status:
-    runs-on: ubuntu-latest
-    outputs:
-      event_branch: ${{ steps.event_branch.outputs.event_branch }}
-      event_name: ${{ steps.event_name.outputs.event_name }}
-      pull_merged: ${{ steps.pull_merged.outputs.pull_merged }}
+          echo "Action version to use: ${{ env.action_version }}"
+          echo "Run test: ${{ env.test }}"
+        
+  Activating_Parser:
+    needs: [User_Inputs]
+    uses: fnlcr-bids-sdsi/gitflow-R/.github/workflows/parser.yml@master
+      with:
+        image_to_use: ${{ needs.User_Inputs.env.set_image_to_be_used }}
+        verions_to_use: ${{ needs.User_Inputs.env.action_version }}
+        test: ${{ needs.User_Inputs.env.test }}
       
-    steps:
-      - name: Acquiring Event Name
-        id: event_name
-        shell: bash
-        run: |
-          echo "event_name=${{ github.event_name }}" >> $GITHUB_OUTPUT
-          echo "${{ github.event_name }}"
-          
-      - name: Check If Merged
-        id: pull_merged
-        shell: bash
-        run: |
-          echo "pull_merged=${{ github.event.pull_request.merged }}" >> $GITHUB_OUTPUT
-          echo "${{ github.event.pull_request.merged }}"
-        
-      - name: Extract branch name
-        id: event_branch
-        shell: bash
-        run: |
-          echo "event_branch=${{ github.ref_name }}" >> $GITHUB_OUTPUT
-          echo "${{ github.ref_name }}"
-        
-        
-  Test_push:
-    needs: [Acquiring_Event_Type_And_Status, User_Inputs]
-    if: ${{ needs.Acquiring_Event_Type_And_Status.outputs.event_name == 'push' }}
-    uses: $ {{ needs.User_Inputs.env.test_run_2 }}
-    with:
-      action: "test"
-      githubbranch: "${{ needs.Acquiring_Event_Type_And_Status.outputs.event_branch }}"
-      image_to_use: "${{ needs.User_Inputs.env.set_images_to_be_used }}"
-       
-  Test_merge_open:
-    needs: [Acquiring_Event_Type_And_Status, User_Inputs]
-    if: ${{ needs.Acquiring_Event_Type_And_Status.outputs.event_name == 'pull_request' && needs.Acquiring_Event_Type_And_Status.outputs.pull_merged == 'false'}}
-    runs-on: ubuntu-latest
-    steps:
-      - shell: bash
-        run: |
-          echo "${{ needs.Acquiring_Event_Type_And_Status.outputs.pull_merged }}"
-  
-  Test_merge_merged:
-    needs: [Acquiring_Event_Type_And_Status, User_Inputs]
-    if: ${{ needs.Acquiring_Event_Type_And_Status.outputs.event_name == 'pull_request' && needs.Acquiring_Event_Type_And_Status.outputs.pull_merged == 'true'}}
-    runs-on: ubuntu-latest
-    steps:
-      - shell: bash
-        run: |
-          echo "${{ needs.Acquiring_Event_Type_And_Status.outputs.pull_merged }}"
