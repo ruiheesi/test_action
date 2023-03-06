@@ -10,7 +10,7 @@ on:
     branches: ['main', 'release*']
 
 jobs:
-  Acquiring_Event_Type_And_Status:
+  User_Inputs:
     runs-on: ubuntu-latest
     env:
       set_image_to_be_used: ghcr.io/ruiheesi/single-cell-rna-r4:latest
@@ -19,7 +19,9 @@ jobs:
       merge_main_check: fnlcr-bids-sdsi/gitflow-R/.github/workflows/Check_On_Merge_to_Main.yml@main
       post_merge_main: fnlcr-bids-sdsi/gitflow-R/.github/workflows/Append_File_On_Merged_to_Main.yml@main
       test_run: ruiheesi/check-action-info/.github/workflows/action.yml
-      
+  
+  Acquiring_Event_Type_And_Status:
+    runs-on: ubuntu-latest
     outputs:
       event_branch: ${{ steps.event_branch.outputs.event_branch }}
       event_name: ${{ steps.event_name.outputs.event_name }}
@@ -55,22 +57,26 @@ jobs:
         
         
   Test_push:
-    needs: Acquiring_Event_Type_And_Status
+    needs: [Acquiring_Event_Type_And_Status, User_Inputs]
     if: ${{ needs.Acquiring_Event_Type_And_Status.outputs.event_name == 'push' }}
     uses: ruiheesi/check-action-info/.github/workflows/action.yml@main
     with:
       action: "test"
       githubbranch: "${{ needs.Acquiring_Event_Type_And_Status.outputs.event_branch }}"
-      image_to_use: "${{ needs.Acquiring_Event_Type_And_Status.env.set_images_to_be_used }}"
+      image_to_use: "${{ needs.User_Inputs.env.set_images_to_be_used }}"
        
   Test_merge_open:
     needs: Acquiring_Event_Type_And_Status
+    runs-on: ubuntu-latest
     steps:
-      - run: |
+      - shell: bash
+        run: |
           echo "${{ needs.Acquiring_Event_Type_And_Status.outputs.pull_opened }}""
   
   Test_merge_merged:
     needs: Acquiring_Event_Type_And_Status
+    runs-on: ubuntu-latest
     steps:
-      - run: |
+      - shell: bash
+        run: |
           echo "${{ needs.Acquiring_Event_Type_And_Status.outputs.pull_merged }}""
