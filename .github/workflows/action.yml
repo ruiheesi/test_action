@@ -9,6 +9,10 @@ on:
     types: ['opened', 'closed']
     branches: ['main', 'release*']
 
+env:
+  version: main
+  test_run_glob: action.yml
+
 jobs:
   User_Inputs:
     runs-on: ubuntu-latest
@@ -19,8 +23,7 @@ jobs:
       merge_main_check: fnlcr-bids-sdsi/gitflow-R/.github/workflows/Check_On_Merge_to_Main.yml@main
       post_merge_main: fnlcr-bids-sdsi/gitflow-R/.github/workflows/Append_File_On_Merged_to_Main.yml@main
       test_run: action.yml
-      version: main
-      
+
     steps:
       - name: Print action scripts to be used
         shell: bash
@@ -66,7 +69,7 @@ jobs:
   Test_push:
     needs: [Acquiring_Event_Type_And_Status, User_Inputs]
     if: ${{ needs.Acquiring_Event_Type_And_Status.outputs.event_name == 'push' }}
-    uses: ruiheesi/check-action-info/.github/workflows/${{ needs.User_Inputs.env.test_run }}@main
+    uses: ruiheesi/check-action-info/.github/workflows/${{ env.test_run_glob }}@main
     with:
       action: "test"
       githubbranch: "${{ needs.Acquiring_Event_Type_And_Status.outputs.event_branch }}"
