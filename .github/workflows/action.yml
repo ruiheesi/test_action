@@ -7,7 +7,7 @@ on:
     
   pull_request:
     types: ['opened', 'closed']
-    branches: ['main', 'release*'']
+    branches: ['main', 'release*']
 
 env:
   Image_to_be_used: ghcr.io/ruiheesi/single-cell-rna-r4:latest
