@@ -60,7 +60,7 @@ jobs:
     uses: ruiheesi/check-action-info/.github/workflows/action.yml@main
     with:
       action: "test"
-      githubbranch: "${{ needs.Acquiring_Event_Type_And_Status.outputs.event_branch }}""
+      githubbranch: "${{ needs.Acquiring_Event_Type_And_Status.outputs.event_branch }}"
       image_to_use: "${{ needs.Acquiring_Event_Type_And_Status.env.set_images_to_be_used }}"
        
   Test_merge_open:
