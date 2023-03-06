@@ -1,5 +1,5 @@
 name: Test
-run-name: Test action
+run-name: Run for ${{ github.actor }} to ${{ github.event_name }} on ${{ github.ref_name }}
 
 on:
   push:
@@ -18,7 +18,7 @@ jobs:
       merge_release_check: fnlcr-bids-sdsi/gitflow-R/.github/workflows/Check_On_Merge_to_Release.yml@main
       merge_main_check: fnlcr-bids-sdsi/gitflow-R/.github/workflows/Check_On_Merge_to_Main.yml@main
       post_merge_main: fnlcr-bids-sdsi/gitflow-R/.github/workflows/Append_File_On_Merged_to_Main.yml@main
-      test_run: ruiheesi/check-action-info/.github/workflows/action.yml
+      test_run: ruiheesi/check-action-info/.github/workflows/action.yml@main
     steps:
       - name: Print action scripts to be used
         shell: bash
@@ -35,7 +35,6 @@ jobs:
     outputs:
       event_branch: ${{ steps.event_branch.outputs.event_branch }}
       event_name: ${{ steps.event_name.outputs.event_name }}
-      pull_opened: ${{ steps.pull_opened.outputs.pull_opened }}
       pull_merged: ${{ steps.pull_merged.outputs.pull_merged }}
       
     steps:
@@ -46,13 +45,6 @@ jobs:
           echo "event_name=${{ github.event_name }}" >> $GITHUB_OUTPUT
           echo "${{ github.event_name }}"
           
-      - name: Check If Opening Merge
-        id: pull_opened
-        shell: bash
-        run: |
-          echo "pull_opened=${{ github.event.pull_request.opened }}" >> $GITHUB_OUTPUT
-          echo "${{ github.event.pull_request.opened }}"
-      
       - name: Check If Merged
         id: pull_merged
         shell: bash
@@ -64,14 +56,14 @@ jobs:
         id: event_branch
         shell: bash
         run: |
-          echo "event_branch=${GITHUB_REF#refs/heads/}" >> $GITHUB_OUTPUT
-          echo "${GITHUB_REF#refs/heads/}"
+          echo "event_branch=${{ github.ref_name }}" >> $GITHUB_OUTPUT
+          echo "${{ github.ref_name }}"
         
         
   Test_push:
     needs: [Acquiring_Event_Type_And_Status, User_Inputs]
     if: ${{ needs.Acquiring_Event_Type_And_Status.outputs.event_name == 'push' }}
-    uses: ruiheesi/check-action-info/.github/workflows/action.yml@main
+    uses: ${{ needs.User_Inputs.env.test_run }}
     with:
       action: "test"
       githubbranch: "${{ needs.Acquiring_Event_Type_And_Status.outputs.event_branch }}"
@@ -79,16 +71,18 @@ jobs:
        
   Test_merge_open:
     needs: [Acquiring_Event_Type_And_Status, User_Inputs]
+    if: ${{ needs.Acquiring_Event_Type_And_Status.outputs.event_name == 'pull_request' && needs.Acquiring_Event_Type_And_Status.outputs.pull_merged == 'false'}}
     runs-on: ubuntu-latest
     steps:
       - shell: bash
         run: |
-          echo "${{ needs.Acquiring_Event_Type_And_Status.outputs.pull_opened }}""
+          echo "${{ needs.Acquiring_Event_Type_And_Status.outputs.pull_merged }}"
   
   Test_merge_merged:
     needs: [Acquiring_Event_Type_And_Status, User_Inputs]
+    if: ${{ needs.Acquiring_Event_Type_And_Status.outputs.event_name == 'pull_request' && needs.Acquiring_Event_Type_And_Status.outputs.pull_merged == 'true'}}
     runs-on: ubuntu-latest
     steps:
       - shell: bash
         run: |
-          echo "${{ needs.Acquiring_Event_Type_And_Status.outputs.pull_merged }}""
+          echo "${{ needs.Acquiring_Event_Type_And_Status.outputs.pull_merged }}"
