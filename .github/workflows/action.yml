@@ -3,11 +3,11 @@ run-name: Test action
 
 on:
   push:
-    branches: [*, !dev, !main]
+    branches: ['*', '!dev', '!main']
     
   pull_request:
-    types: [opened, closed]
-    branches: [main, release*]
+    types: ['opened', 'closed']
+    branches: ['main', 'release*'']
 
 env:
   Image_to_be_used: ghcr.io/ruiheesi/single-cell-rna-r4:latest
