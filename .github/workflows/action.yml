@@ -65,7 +65,8 @@ jobs:
   Test_push:
     needs: [Acquiring_Event_Type_And_Status, User_Inputs]
     if: ${{ needs.Acquiring_Event_Type_And_Status.outputs.event_name == 'push' }}
-    uses: ruiheesi/check-action-info/.github/workflows/action.yml@main
+    uses: ruiheesi/check-action-info/.github/workflows/${{ needs.User_Inputs.env.test_run }}
+    with:
       action: "test"
       githubbranch: "${{ needs.Acquiring_Event_Type_And_Status.outputs.event_branch }}"
       image_to_use: "${{ needs.User_Inputs.env.set_images_to_be_used }}"
