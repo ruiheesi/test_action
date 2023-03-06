@@ -6,6 +6,7 @@ on:
     branches:
       - '*'
       - '!dev'
+      - '!main'
       
   pull_request:
     types:
@@ -14,41 +15,64 @@ on:
     branches:
       - main 
       - release*
+env:
+  Image_to_be_used: ghcr.io/ruiheesi/single-cell-rna-r4:latest
+  commit_check: fnlcr-bids-sdsi/gitflow-R/.github/workflows/Check_On_Commit.yml@main
+  merge_release_check: fnlcr-bids-sdsi/gitflow-R/.github/workflows/Check_On_Merge_to_Release.yml@main
+  merge_main_check: fnlcr-bids-sdsi/gitflow-R/.github/workflows/Check_On_Merge_to_Main.yml@main
+  post_merge_main: fnlcr-bids-sdsi/gitflow-R/.github/workflows/Append_File_On_Merged_to_Main.yml@main
+  test_run: ruiheesi/check-action-info/.github/workflows/action.yml@main
 
 jobs:
-  Get_infos:
+  Acquiring_Event_Type_And_Status:
     runs-on: ubuntu-latest
-    env:
-      githubtoken: ${{ secrets.GITHUB_TOKEN }}
     outputs:
-      branch: ${{ steps.extract_branch.outputs.branch }}
-      token: ${{ steps.extract_token.outputs.token }}
+      event_branch: ${{ steps.event_branch.outputs.event_branch }}
+      event_name: ${{ steps.event_name.outputs.event_name }}
+      pull_opened: ${{ steps.pull_opened.outputs.pull_opened }}
+      pull_merged: ${{ steps.pull_merged.outputs.pull_merged }}
     steps:
-      - run: |
-          echo "event_name: ${{ github.event_name }}"
-      - run: |
-          echo "event_name: ${{ github.push.branch }}"
-      - run: |
-          echo "event_type: ${{ github.event.action}}"
-      - run: |
-          echo "merged: ${{ github.event.pull_request.merged }}"
+      - name: Acquiring Event Name
+        id: event_name
+        shell: bash
+        run: |
+          echo "event_name=${{ github.event_name }" >> $GITHUB_OUTPUT
+          
+      - name: Check If Opening Merge
+        id: pull_opened
+        shell: bash
+        run: |
+          echo "pull_opened: ${{ github.event.pull_request.opened }}" >> $GITHUB_OUTPUT
+      
+      - name: Check If Merged
+        id: pull_merged
+        shell: bash
+        run: |
+          echo "pull_merged: ${{ github.event.pull_request.merged }}" >> $GITHUB_OUTPUT
+        
       - name: Extract branch name
+        id: event_branch
         shell: bash
         run: |
-          echo "branch=${GITHUB_REF#refs/heads/}" >> $GITHUB_OUTPUT
-        id: extract_branch
+          echo "event_branch=${GITHUB_REF#refs/heads/}" >> $GITHUB_OUTPUT
         
-      - name: Extract token
-        shell: bash
-        run: |
-          echo "token=$githubtoken" >> $GITHUB_OUTPUT
-          echo "$githubtoken"
-        id: extract_token
         
-  Routine_Check_for_Commit:
-      needs: Get_infos
-      uses: ruiheesi/check-action-info/.github/workflows/action.yml@main
-      with:
-         action: "test-not test"
-         githubbranch: "${{ needs.Get_infos.outputs.branch }}"
-         image_to_use: "ghcr.io/ruiheesi/single-cell-rna-r4:latest"
+        
+  Test_push:
+    needs: Acquiring_Event_Type_And_Status
+    if: ${{ needs.Acquiring_Event_Type_And_Status.outputs.event_name == "push"}}
+    uses: ${{ env.test_run }}
+    with:
+      action: "test"
+      githubbranch: ${{ needs.Acquiring_Event_Type_And_Status.outputs.event_branch }}
+      image_to_use: ${{ env.Image_to_be_used }}
+       
+  Test_merge_open:
+    needs: Acquiring_Event_Type_And_Status
+    run: |
+      echo "${{ needs.Acquiring_Event_Type_And_Status.outputs.pull_opened }}""
+  
+  Test_merge_merged:
+    needs: Acquiring_Event_Type_And_Status
+    run: |
+      echo "${{ needs.Acquiring_Event_Type_And_Status.outputs.pull_merged }}""
