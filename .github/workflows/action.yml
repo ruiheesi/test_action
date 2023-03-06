@@ -65,7 +65,7 @@ jobs:
   Test_push:
     needs: [Acquiring_Event_Type_And_Status, User_Inputs]
     if: ${{ needs.Acquiring_Event_Type_And_Status.outputs.event_name == 'push' }}
-    uses: ${{ needs.User_Inputs.env.test_run }}@${{ needs.User_Inputs.env.version_to_use }}
+    uses: "${{ needs.User_Inputs.env.test_run }}"@"${{ needs.User_Inputs.env.version_to_use }}"
     with:
       action: "test"
       githubbranch: "${{ needs.Acquiring_Event_Type_And_Status.outputs.event_branch }}"
