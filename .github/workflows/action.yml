@@ -29,7 +29,7 @@ jobs:
     needs: [User_Inputs]
     uses: fnlcr-bids-sdsi/gitflow-R/.github/workflows/parser.yml@master
     with:
-      image_to_use: ${{ needs.User_Inputs.env.set_image_to_be_used }}
-      verions_to_use: ${{ needs.User_Inputs.env.action_version }}
-      test: ${{ needs.User_Inputs.env.test }}
+      image_to_use: "${{ needs.User_Inputs.env.set_image_to_be_used }}"
+      verions_to_use: "${{ needs.User_Inputs.env.action_version }}"
+      test: "${{ needs.User_Inputs.env.test }}"
       
