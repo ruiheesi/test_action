@@ -9,22 +9,23 @@ on:
     types: ['opened', 'closed']
     branches: ['main', 'release*']
 
-env:
-  set_image_to_be_used: ghcr.io/ruiheesi/single-cell-rna-r4:latest
-  commit_check: fnlcr-bids-sdsi/gitflow-R/.github/workflows/Check_On_Commit.yml@main
-  merge_release_check: fnlcr-bids-sdsi/gitflow-R/.github/workflows/Check_On_Merge_to_Release.yml@main
-  merge_main_check: fnlcr-bids-sdsi/gitflow-R/.github/workflows/Check_On_Merge_to_Main.yml@main
-  post_merge_main: fnlcr-bids-sdsi/gitflow-R/.github/workflows/Append_File_On_Merged_to_Main.yml@main
-  test_run: ruiheesi/check-action-info/.github/workflows/action.yml
-
 jobs:
   Acquiring_Event_Type_And_Status:
     runs-on: ubuntu-latest
+    env:
+      set_image_to_be_used: ghcr.io/ruiheesi/single-cell-rna-r4:latest
+      commit_check: fnlcr-bids-sdsi/gitflow-R/.github/workflows/Check_On_Commit.yml@main
+      merge_release_check: fnlcr-bids-sdsi/gitflow-R/.github/workflows/Check_On_Merge_to_Release.yml@main
+      merge_main_check: fnlcr-bids-sdsi/gitflow-R/.github/workflows/Check_On_Merge_to_Main.yml@main
+      post_merge_main: fnlcr-bids-sdsi/gitflow-R/.github/workflows/Append_File_On_Merged_to_Main.yml@main
+      test_run: ruiheesi/check-action-info/.github/workflows/action.yml
+      
     outputs:
       event_branch: ${{ steps.event_branch.outputs.event_branch }}
       event_name: ${{ steps.event_name.outputs.event_name }}
       pull_opened: ${{ steps.pull_opened.outputs.pull_opened }}
       pull_merged: ${{ steps.pull_merged.outputs.pull_merged }}
+      
     steps:
       - name: Acquiring Event Name
         id: event_name
@@ -59,8 +60,8 @@ jobs:
     uses: ruiheesi/check-action-info/.github/workflows/action.yml@main
     with:
       action: "test"
-      githubbranch: ${{ needs.Acquiring_Event_Type_And_Status.outputs.event_branch }}
-      image_to_use: "${{ env.set_image_to_be_used }}"
+      githubbranch: "${{ needs.Acquiring_Event_Type_And_Status.outputs.event_branch }}""
+      image_to_use: "${{ needs.Acquiring_Event_Type_And_Status.env.set_images_to_be_used }}"
        
   Test_merge_open:
     needs: Acquiring_Event_Type_And_Status
