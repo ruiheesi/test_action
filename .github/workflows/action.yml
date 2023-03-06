@@ -61,7 +61,7 @@ jobs:
         
   Test_push:
     needs: Acquiring_Event_Type_And_Status
-    if: ${{ needs.Acquiring_Event_Type_And_Status.outputs.event_name == "push"}}
+    if: ${{ needs.Acquiring_Event_Type_And_Status.outputs.event_name == push }}
     uses: ruiheesi/check-action-info/.github/workflows/action.yml@main
     with:
       action: "test"
