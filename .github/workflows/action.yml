@@ -11,7 +11,7 @@ on:
 
 env:
   version: main
-  test_run_glob: action.yml
+  test_run_glob2: action.yml
 
 jobs:
   User_Inputs:
@@ -69,7 +69,7 @@ jobs:
   Test_push:
     needs: [Acquiring_Event_Type_And_Status, User_Inputs]
     if: ${{ needs.Acquiring_Event_Type_And_Status.outputs.event_name == 'push' }}
-    uses: ruiheesi/check-action-info/.github/workflows/${{ env.test_run_glob }}@main
+    uses: ruiheesi/check-action-info/.github/workflows/${{ env.test_run_glob2 }}@main
     with:
       action: "test"
       githubbranch: "${{ needs.Acquiring_Event_Type_And_Status.outputs.event_branch }}"
