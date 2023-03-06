@@ -64,14 +64,12 @@ jobs:
        
   Test_merge_open:
     needs: Acquiring_Event_Type_And_Status
-    uses: ruiheesi/check-action-info/.github/workflows/action.yml@main
     steps:
       - run: |
           echo "${{ needs.Acquiring_Event_Type_And_Status.outputs.pull_opened }}""
   
   Test_merge_merged:
     needs: Acquiring_Event_Type_And_Status
-    uses: ruiheesi/check-action-info/.github/workflows/action.yml@main
     steps:
       - run: |
           echo "${{ needs.Acquiring_Event_Type_And_Status.outputs.pull_merged }}""
