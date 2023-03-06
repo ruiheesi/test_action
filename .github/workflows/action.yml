@@ -36,7 +36,8 @@ jobs:
         id: event_name
         shell: bash
         run: |
-          echo "event_name=${{ github.event_name }" >> $GITHUB_OUTPUT
+          echo "event_name=${{ github.event_name }}" >> $GITHUB_OUTPUT
+          echo "${{ env.test_run }}"
           
       - name: Check If Opening Merge
         id: pull_opened
