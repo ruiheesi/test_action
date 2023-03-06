@@ -3,18 +3,12 @@ run-name: Test action
 
 on:
   push:
-    branches:
-      - '*'
-      - '!dev'
-      - '!main'
-      
+    branches: [*, !dev, !main]
+    
   pull_request:
-    types:
-      - opened
-      - closed
-    branches:
-      - main 
-      - release*
+    types: [opened, closed]
+    branches: [main, release*]
+
 env:
   Image_to_be_used: ghcr.io/ruiheesi/single-cell-rna-r4:latest
   commit_check: fnlcr-bids-sdsi/gitflow-R/.github/workflows/Check_On_Commit.yml@main
@@ -66,16 +60,18 @@ jobs:
     with:
       action: "test"
       githubbranch: ${{ needs.Acquiring_Event_Type_And_Status.outputs.event_branch }}
-      image_to_use: ${{ env.Image_to_be_used }}
+      image_to_use: "${{ env.Image_to_be_used }}"
        
   Test_merge_open:
     needs: Acquiring_Event_Type_And_Status
     uses: ruiheesi/check-action-info/.github/workflows/action.yml@main
-    run: |
-      echo "${{ needs.Acquiring_Event_Type_And_Status.outputs.pull_opened }}""
+    steps:
+      run: |
+        echo "${{ needs.Acquiring_Event_Type_And_Status.outputs.pull_opened }}""
   
   Test_merge_merged:
     needs: Acquiring_Event_Type_And_Status
     uses: ruiheesi/check-action-info/.github/workflows/action.yml@main
-    run: |
-      echo "${{ needs.Acquiring_Event_Type_And_Status.outputs.pull_merged }}""
+    steps:
+      run: |
+        echo "${{ needs.Acquiring_Event_Type_And_Status.outputs.pull_merged }}""
